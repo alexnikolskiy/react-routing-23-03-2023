@@ -1,8 +1,8 @@
 import './Button.css'
 
-function Button({title, handleClick}) {
+function Button({title, ...rest}) {
   return (
-    <button className="Button" onClick={handleClick}>{title}</button>
+    <button className="Button" {...rest}>{title}</button>
   )
 }
 

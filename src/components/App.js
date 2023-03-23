@@ -1,18 +1,21 @@
-import './App.css';
-import Input from './Input'
-import Button from './Button'
-import Spinner from './Spinner'
-import Card from './Card'
-import api from '../api/Api'
 import { useEffect, useState } from "react";
+import { Routes, Route } from 'react-router-dom'
+import api from '../api/Api'
+import { Main } from './Main'
+import { Photo } from "./Photo";
+import './App.css';
+import { NotFound } from "./NotFound";
 
 function App() {
   const [querySearch, setQuerySearch] = useState('')
   const [cards, setCards] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   useEffect(() => {
-    setIsLoading(true)
+    if (!isSubmitted) {
+      return
+    }
+
     api.search(querySearch, 20).then(data => {
       setCards(data.results.map((item) => ({
         id: item.id,
@@ -21,24 +24,34 @@ function App() {
         title: item.description,
         subtitle: item.user.name,
       })))
-      setIsLoading(false)
+      setIsSubmitted(false)
     })
-  }, [querySearch])
+  }, [querySearch, isSubmitted])
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault()
+    setIsSubmitted(true)
+  }
+
+  const handleQuerySearchChange = (ev) => {
+    setQuerySearch(ev.target.value)
+  }
 
   return (
     <div className="App">
-      <div className="App-content">
-        <div className="App-search">
-          <Input placeholder={'type to search...'} handleChange={() => {}} />
-          <Button title="Search" handleClick={() => setQuerySearch('brazil')} />
-        </div>
-        <div className="App-cards">
-          {isLoading
-            ? <Spinner />
-            : cards.map(({ id, ...card }) => <Card key={id} {...card} />)
-          }
-        </div>
-      </div>
+      <Routes>
+        <Route exact path="/" element={
+          <Main
+            cards={cards}
+            isSubmitted={isSubmitted}
+            querySearch={querySearch}
+            handleSubmit={handleSubmit}
+            handleChange={handleQuerySearchChange}
+          />
+        } />
+        <Route exact path="/photos/:id" element={<Photo photos={cards} />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   );
 }

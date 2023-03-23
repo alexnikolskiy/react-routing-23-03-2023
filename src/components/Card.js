@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom'
 import './Card.css'
 
-function Card({ title, subtitle, src, alt }) {
+function Card({ title, subtitle, src, alt, id }) {
   return (
-    <div className="Card">
+    <Link className="Card" to={`/photos/${id}`}>
       <img
         className="Card-image"
         src={src}
@@ -10,7 +11,7 @@ function Card({ title, subtitle, src, alt }) {
       />
       <p className="Card-title">{title}</p>
       <p className="Card-subtitle">{subtitle}</p>
-    </div>
+    </Link>
   )
 }
 

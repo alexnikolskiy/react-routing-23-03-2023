@@ -1,0 +1,17 @@
+.Main {
+    max-width: 860px;
+    margin: 90px auto;
+}
+
+.Main-search {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.Main-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 48px;
+}
